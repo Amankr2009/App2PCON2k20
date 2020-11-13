@@ -4,7 +4,7 @@ package com.dark_phoenix09.app2pcon2k20.models
 class Product {
     public fun Product(){}
 
-    var image: String? = null
+    var image: String? =null
     var name: String? = null
     var description: String? = null
     var price: String? = null

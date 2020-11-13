@@ -46,7 +46,9 @@ class dashboard : AppCompatActivity() {
 
         store_card.setOnClickListener {
             Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this,stores::class.java))
+            val intent = Intent(this,stores::class.java)
+            intent.putExtra("type","s")
+            startActivity(intent)
         }
 
         //weather
@@ -84,6 +86,11 @@ class dashboard : AppCompatActivity() {
             }
             if(it.itemId == R.id.setting_btn){
                 startActivity(Intent(this, userProfile::class.java))
+            }
+            if(it.itemId == R.id.my_cart_btn){
+                val intent = Intent(this,stores::class.java)
+                intent.putExtra("type","c")
+                startActivity(intent)
             }
             return@OnNavigationItemSelectedListener true
         }

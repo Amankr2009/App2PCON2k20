@@ -5,7 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.dark_phoenix09.app2pcon2k20.Adapters.cartAdapter
 import com.dark_phoenix09.app2pcon2k20.R
+import com.dark_phoenix09.app2pcon2k20.myCart.myCartDatabase
+import kotlinx.android.synthetic.main.fragment_product_section.*
+import kotlinx.android.synthetic.main.fragment_product_section.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +29,7 @@ class productSectionFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var myView:View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +44,23 @@ class productSectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_section, container, false)
+        myView= inflater.inflate(R.layout.fragment_product_section, container, false)
+
+        val type= arguments?.getString("type")
+
+        Toast.makeText(myView.context, type, Toast.LENGTH_SHORT).show()
+
+        if(type.equals("cart")){
+            Toast.makeText(myView.context, "cart", Toast.LENGTH_SHORT).show()
+            var cardDB=Room.databaseBuilder(myView.context,myCartDatabase::class.java,"cart_db").allowMainThreadQueries().build()
+            var data=cardDB.cartDAO().getCart()
+            val adapter=cartAdapter(data,activity)
+            myView.section_product_list.setHasFixedSize(true)
+            myView.section_product_list.layoutManager=LinearLayoutManager(myView.context)
+            myView.section_product_list.adapter=adapter
+        }
+
+        return myView
     }
 
     companion object {

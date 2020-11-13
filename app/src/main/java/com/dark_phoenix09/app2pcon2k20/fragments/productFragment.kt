@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.room.Room
 import com.dark_phoenix09.app2pcon2k20.R
 import com.dark_phoenix09.app2pcon2k20.models.Product
+import com.dark_phoenix09.app2pcon2k20.models.mycart
+import com.dark_phoenix09.app2pcon2k20.myCart.myCartDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -32,6 +35,7 @@ class productFragment : Fragment() {
     lateinit var myView: View
 
     val db=FirebaseFirestore.getInstance()
+    var cProduct:Product?=null
     val mStorage=FirebaseStorage.getInstance().getReference()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +57,7 @@ class productFragment : Fragment() {
         db.collection("products").document(value.toString()).get().addOnCompleteListener {
             if(it.isSuccessful){
                 val product=it.result.toObject(Product::class.java)
+                cProduct=product
                 view?.product_name?.text=product?.name
                 view?.product_price?.text=product?.price
                 view?.product_description?.text=product?.description
@@ -61,6 +66,13 @@ class productFragment : Fragment() {
                 Log.d("product view set",it.exception?.message.toString())
                 Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        myView.add_to_cart_btn.setOnClickListener {
+            val cartDb=Room.databaseBuilder(myView.context,myCartDatabase::class.java,"cart_db").allowMainThreadQueries().build()
+            val cart=mycart(cProduct?.image.toString(),cProduct?.name.toString(),cProduct?.description.toString(),cProduct?.price.toString(),cProduct?.code.toString(),cProduct?.type.toString())
+            cartDb.cartDAO().insertIntoCart(cart)
+            Toast.makeText(myView.context,"Item added to cart",Toast.LENGTH_SHORT).show()
         }
 
         myView.buy_now_btn.setOnClickListener {

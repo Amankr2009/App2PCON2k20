@@ -104,6 +104,16 @@ dependencies {
     //firebase firestore ui library
     implementation 'com.firebaseui:firebase-ui-firestore:6.4.0'
 
+    //room
+    def room_version = "2.2.5"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+
 
     dependencies {
         // Import the BoM for the Firebase platform
