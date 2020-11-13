@@ -55,9 +55,9 @@ class mainDashboardFragment : Fragment() {
         var query=FirebaseFirestore.getInstance().collection("products")
         var option=FirestoreRecyclerOptions.Builder<Product>().setQuery(query,Product::class.java).build()
         adapter=ProductAdapter(option,activity)
-        view.all_product_list.layoutManager=LinearLayoutManager(context)
-        view.all_product_list.setHasFixedSize(true)
-        view.all_product_list.adapter=adapter
+        myView.all_product_list.layoutManager=LinearLayoutManager(context)
+        myView.all_product_list.setHasFixedSize(true)
+        myView.all_product_list.adapter=adapter
 
         //scan initiation
         view.scan_btn.setOnClickListener {
@@ -65,6 +65,72 @@ class mainDashboardFragment : Fragment() {
             integrator.setOrientationLocked(false)
             integrator.initiateScan()
         }
+
+        myView.accessories_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","mobiles")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.appliances_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","appliances")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.beauty_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","beauty")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.fashion_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","fashion")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.grocery_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","grocery")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.kitchen_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","chefzone")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.offers_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","specialoffer")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.stationaty_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","stationary")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+        myView.toys_btn.setOnClickListener {
+            val fragment=productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","kidszone")
+            fragment.arguments=argument
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_container,fragment)?.addToBackStack(null)?.commit()
+        }
+
+
         return view
     }
 

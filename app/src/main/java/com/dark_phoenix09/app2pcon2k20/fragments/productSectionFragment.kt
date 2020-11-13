@@ -9,9 +9,16 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.dark_phoenix09.app2pcon2k20.Adapters.ProductAdapter
 import com.dark_phoenix09.app2pcon2k20.Adapters.cartAdapter
 import com.dark_phoenix09.app2pcon2k20.R
+import com.dark_phoenix09.app2pcon2k20.ViewHolders.ProductViewHolder
+import com.dark_phoenix09.app2pcon2k20.models.Product
 import com.dark_phoenix09.app2pcon2k20.myCart.myCartDatabase
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_main_dashboard.view.*
 import kotlinx.android.synthetic.main.fragment_product_section.*
 import kotlinx.android.synthetic.main.fragment_product_section.view.*
 
@@ -30,6 +37,8 @@ class productSectionFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var myView:View
+    lateinit var adapter: FirestoreRecyclerAdapter<Product, ProductViewHolder>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +67,28 @@ class productSectionFragment : Fragment() {
             myView.section_product_list.setHasFixedSize(true)
             myView.section_product_list.layoutManager=LinearLayoutManager(myView.context)
             myView.section_product_list.adapter=adapter
+        }else{
+            val type=arguments?.getString("type").toString()
+            var query= FirebaseFirestore.getInstance().collection(type)
+            var option= FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product::class.java).build()
+            adapter= ProductAdapter(option,activity)
+            myView.section_product_list.layoutManager=LinearLayoutManager(context)
+            myView.section_product_list.setHasFixedSize(true)
+            myView.section_product_list.adapter=adapter
         }
 
         return myView
     }
 
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.stopListening()
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
