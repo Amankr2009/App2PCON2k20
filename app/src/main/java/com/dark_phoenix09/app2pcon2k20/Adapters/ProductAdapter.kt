@@ -1,7 +1,5 @@
 package com.dark_phoenix09.app2pcon2k20.Adapters
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

@@ -92,6 +92,11 @@ class dashboard : AppCompatActivity() {
                 intent.putExtra("type","c")
                 startActivity(intent)
             }
+            if(it.itemId==R.id.myorder_btn){
+                val intent = Intent(this,stores::class.java)
+                intent.putExtra("type","m")
+                startActivity(intent)
+            }
             return@OnNavigationItemSelectedListener true
         }
 

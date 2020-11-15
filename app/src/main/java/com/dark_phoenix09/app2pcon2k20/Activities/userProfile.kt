@@ -21,7 +21,21 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.activity_user_profile.address_txt
+import kotlinx.android.synthetic.main.activity_user_profile.address_type_radio
+import kotlinx.android.synthetic.main.activity_user_profile.area_txt
+import kotlinx.android.synthetic.main.activity_user_profile.city
+import kotlinx.android.synthetic.main.activity_user_profile.country
+import kotlinx.android.synthetic.main.activity_user_profile.home_address
+import kotlinx.android.synthetic.main.activity_user_profile.location_btn
+import kotlinx.android.synthetic.main.activity_user_profile.office_address
+import kotlinx.android.synthetic.main.activity_user_profile.postal_code_txt
+import kotlinx.android.synthetic.main.activity_user_profile.profile_alt_number_txt
+import kotlinx.android.synthetic.main.activity_user_profile.profile_name_txt
+import kotlinx.android.synthetic.main.activity_user_profile.profile_number_txt
+import kotlinx.android.synthetic.main.activity_user_profile.profile_pic
+import kotlinx.android.synthetic.main.activity_user_profile.save_btn
+import kotlinx.android.synthetic.main.activity_user_profile.tnc_check
 import java.util.*
 
 
@@ -52,7 +66,6 @@ class userProfile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
-
 
 
         fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
@@ -99,6 +112,10 @@ class userProfile : AppCompatActivity() {
         //setting data to the database
         save_btn.setOnClickListener {
 
+            if(!tnc_check.isChecked){
+                Toast.makeText(this, "Please accept terms and conditions.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             cAddress=address_txt.text.toString()
             cArea=area_txt.text.toString()
             cCity=city.text.toString()

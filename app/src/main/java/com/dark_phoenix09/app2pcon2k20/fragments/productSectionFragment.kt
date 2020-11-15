@@ -11,13 +11,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dark_phoenix09.app2pcon2k20.Adapters.ProductAdapter
 import com.dark_phoenix09.app2pcon2k20.Adapters.cartAdapter
+import com.dark_phoenix09.app2pcon2k20.Adapters.orderAdapter
 import com.dark_phoenix09.app2pcon2k20.R
+import com.dark_phoenix09.app2pcon2k20.ViewHolders.OrderViewHolder
 import com.dark_phoenix09.app2pcon2k20.ViewHolders.ProductViewHolder
+import com.dark_phoenix09.app2pcon2k20.models.Order
 import com.dark_phoenix09.app2pcon2k20.models.Product
+import com.dark_phoenix09.app2pcon2k20.models.myorder
 import com.dark_phoenix09.app2pcon2k20.myCart.myCartDatabase
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.android.synthetic.main.fragment_main_dashboard.view.*
 import kotlinx.android.synthetic.main.fragment_product_section.*
 import kotlinx.android.synthetic.main.fragment_product_section.view.*
@@ -38,6 +44,10 @@ class productSectionFragment : Fragment() {
     private var param2: String? = null
     lateinit var myView:View
     lateinit var adapter: FirestoreRecyclerAdapter<Product, ProductViewHolder>
+    lateinit var oAdapter: FirestoreRecyclerAdapter<myorder,OrderViewHolder>
+
+    val db=FirebaseFirestore.getInstance()
+    val mAuth=FirebaseAuth.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +69,20 @@ class productSectionFragment : Fragment() {
 
         Toast.makeText(myView.context, type, Toast.LENGTH_SHORT).show()
 
-        if(type.equals("cart")){
+        if(type.equals("m")){
+            val type="beauty"
+            var query= FirebaseFirestore.getInstance().collection(type)
+            var option= FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product::class.java).build()
+            adapter= ProductAdapter(option,activity)
+            //my order
+            val oQuery=db.collection("users").document(mAuth.currentUser?.uid.toString()).collection("ordre")
+            val oOptions=FirestoreRecyclerOptions.Builder<myorder>().setQuery(oQuery,myorder::class.java).build()
+            oAdapter=orderAdapter(oOptions,activity)
+            myView.section_product_list.layoutManager=LinearLayoutManager(context)
+            myView.section_product_list.setHasFixedSize(true)
+            myView.section_product_list.adapter=oAdapter
+
+        }else if(type.equals("cart")){
             Toast.makeText(myView.context, "cart", Toast.LENGTH_SHORT).show()
             var cardDB=Room.databaseBuilder(myView.context,myCartDatabase::class.java,"cart_db").allowMainThreadQueries().build()
             var data=cardDB.cartDAO().getCart()
@@ -68,6 +91,9 @@ class productSectionFragment : Fragment() {
             myView.section_product_list.layoutManager=LinearLayoutManager(myView.context)
             myView.section_product_list.adapter=adapter
         }else{
+            val oQuery=db.collection("users").document(mAuth.currentUser?.uid.toString()).collection("ordre")
+            val oOptions=FirestoreRecyclerOptions.Builder<myorder>().setQuery(oQuery,myorder::class.java).build()
+            oAdapter=orderAdapter(oOptions,activity)
             val type=arguments?.getString("type").toString()
             var query= FirebaseFirestore.getInstance().collection(type)
             var option= FirestoreRecyclerOptions.Builder<Product>().setQuery(query, Product::class.java).build()
@@ -83,11 +109,13 @@ class productSectionFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         adapter.startListening()
+        oAdapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+        oAdapter.stopListening()
     }
     companion object {
         /**

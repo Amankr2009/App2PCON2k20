@@ -14,10 +14,16 @@ class stores : AppCompatActivity() {
         var type=intent.getStringExtra("type")
         if(type.equals("s"))
             supportFragmentManager.beginTransaction().add(R.id.fragment_container,mainDashboardFragment()).commit()
-        else{
+        else if(type.equals("c")){
             val fragment = productSectionFragment()
             val argument=Bundle()
             argument.putString("type","cart")
+            fragment.arguments=argument
+            supportFragmentManager.beginTransaction().add(R.id.fragment_container,fragment).commit()
+        }else if(type.equals("m")){
+            val fragment = productSectionFragment()
+            val argument=Bundle()
+            argument.putString("type","m")
             fragment.arguments=argument
             supportFragmentManager.beginTransaction().add(R.id.fragment_container,fragment).commit()
         }
